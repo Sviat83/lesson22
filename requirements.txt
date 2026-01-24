@@ -1,2 +1,8 @@
 fastapi
 uvicorn[standard]
+pydantic
+pydantic_settings
+fastapi.security
+passlib.context
+jose
+datetime
