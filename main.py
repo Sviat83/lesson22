@@ -1,9 +1,16 @@
 from fastapi import FastAPI, Depends, HTTPException, status
+from sqlalchemy.orm import sessionmaker, declarative_base, Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
 from pydantic import BaseModel
+from database import Base, engine
+from deps import get_db
+from models import UserModel
+
+
+Base.metadata.create_all(bind=engine)
 
 # ==================================================
 # ⚙️ CONFIG
@@ -173,3 +180,8 @@ def profile(user: User = Depends(get_current_user)):
 @app.get("/admin")
 def admin_panel(user: User = Depends(require_admin)):
     return {"message": "Welcome admin"}
+
+@app.get("/product")
+def get_product(db: Session = Depends(get_db)):
+    users = db.query(UserModel).all()
+    return users
